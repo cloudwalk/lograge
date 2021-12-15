@@ -45,6 +45,8 @@ module Lograge
         elsif (error = payload[:exception])
           exception, message = error
           { status: get_error_status_code(exception), error: "#{exception}: #{message}" }
+        elsif payload[:request]&.env['warden']&.result == :failure
+          { status: 401 }
         else
           { status: default_status }
         end
